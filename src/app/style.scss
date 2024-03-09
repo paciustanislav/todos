@@ -1,7 +1,92 @@
 
 * {
+  // padding: 0;
+  // margin: 0;
+  // box-sizing: border-box;
+  // outline: none;
+}
+
+body {
   padding: 0;
   margin: 0;
-  box-sizing: border-box;
-  outline: none;
+}
+
+.app {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.dnd-ghost {
+  opacity: 0.3;
+}
+
+.p-card-body, .p-dialog-header {
+  padding: 15px;
+}
+.p-dialog-content {
+  padding: 15px;
+  padding-top: 0;
+  overflow: visible;
+}
+.p-card-content {
+  padding: 0;
+}
+
+.todo-card {
+  width: 100%;
+  position: relative;
+  border: 2px solid rgba( 0, 0, 0, 0.05 );
+  .todo-card-actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transition: 0.4s;
+    opacity: 0;
+    padding: 4px 6px;
+    i {
+      transition: 0.4s;
+      opacity: 0.3;
+      &:hover {
+        opacity: 1 !important;
+      }
+    }
+  }
+  &:hover {
+    .todo-card-actions {
+      opacity: 1;
+    }
+  }
+  &.completed {
+    text-decoration: line-through;
+    color: rgba( 0, 0, 0, 0.5 );
+  }
+  &.selected {
+    border-color: #4F46E5;
+    .todo-card-actions {
+      opacity: 1;
+      .select {
+        opacity: 1;
+        color: #4F46E5;
+      }
+    }
+  }
+}
+
+
+
+.fade-move,
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s cubic-bezier( 0.55, 0, 0.1, 1 );
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: scaleY( 0.01 ) translate( 30px, 0 );
+}
+
+.fade-leave-active {
+  position: absolute;
 }

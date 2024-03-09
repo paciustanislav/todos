@@ -7,12 +7,15 @@
   "overrides": [],
   // "parser": "@typescript-eslint/parser",
   "parser": "vue-eslint-parser",
+  // "parser": "@babel/eslint-parser",
   "parserOptions": {
+    "parser": "@typescript-eslint/parser",
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
   "plugins": ["vue", "@typescript-eslint"],
   "rules": {
+    "vue/multi-word-component-names": "off",
     "no-console": "off",
     "quotes": ["error", "single"],
     "space-in-parens": ["error", "always"],
