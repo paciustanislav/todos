@@ -1,10 +1,16 @@
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { TodoEntity } from '../../shared/types'
 
 export const useTodosStore = defineStore( 'todos', () => {
 
-  const items = ref<TodoEntity[]>( [] )
+  const persistent = localStorage.getItem( 'todo-iss' )
+
+  const items = ref<TodoEntity[]>( persistent ? JSON.parse( persistent ) : [] )
+
+  watch( items.value, () => {
+    localStorage.setItem( 'todo-iss', JSON.stringify( items.value ) )
+  } )
 
   const currentId = ref<number | null>( null )
 

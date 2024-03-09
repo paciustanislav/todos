@@ -12,7 +12,6 @@ run `npm i` and then run `npm run dev`
 #### `npm i pinia`
 #### `npm i vue-router`
 #### `npm i sass` (думал что буду писать сам UI)
-#### `npm i dayjs` (хочу сделать дедлайн для задач)
 #### `npm i primevue` (потом стало лень писать UI)
 #### `npm i primeflex`
 #### `npm i primeicons`

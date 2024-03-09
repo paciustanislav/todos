@@ -1,17 +1,18 @@
 <script setup lang="ts">
-
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
 import { useTodosStore } from '../../app/store'
 import Button from 'primevue/button'
 import TodoCard from '../../shared/todos/todo-card.vue'
 import TodoDialog from './todo-dialog.vue'
 import TodoFilters from '../../shared/todos/todo-filters.vue'
+import { Filters, TodoEntity } from '../../shared/types.ts'
 
 const todos = useTodosStore()
 
 const visible = ref<boolean>( false )
 const selected = ref<number[]>( [] )
+const filters = ref<Filters | null>( null )
 
 const onSelect = ( id: number ) => {
   if ( selected.value.includes( id ) ) {
@@ -24,6 +25,7 @@ const onSelect = ( id: number ) => {
 
 const onCompleted = ( id: number, status: boolean ) => {
   todos.setCompleted( id, status )
+  console.log( id, status )
 }
 
 // ...
@@ -43,6 +45,17 @@ const removeClick = () => {
   selected.value = []
 }
 
+const onChangeFilters = ( f: Filters ) => filters.value = f
+
+const items = computed<TodoEntity[]>( () => {
+  if ( filters.value ) {
+    return todos.items.filter( ( todo ) => !(
+      typeof filters.value?.completed === 'boolean' && todo.completed !== filters.value?.completed
+    ) )
+  }
+  return todos.items
+} )
+
 </script>
 
 <template>
@@ -52,28 +65,27 @@ const removeClick = () => {
 
     <div class="flex gap-2">
       <div class="flex flex-1">
-        <todo-filters/>
+        <todo-filters @change="onChangeFilters" />
       </div>
       <Button
         v-if="selected.length"
         type="button"
-        size="small"
         severity="danger"
+        size="small"
+        text
         icon="pi pi-trash"
-        text @click="removeClick"
+        @click="removeClick"
       />
       <Button
         type="button"
         size="small"
+        text
         icon="pi pi-plus"
-        text @click="addClick"
+        @click="addClick"
       />
     </div>
 
     <div class="py-2">
-      <div v-if="!todos.items.length" class="flex align-items-center text-gray-300">
-        Нет задач
-      </div>
       <vue-draggable-next
         :list="todos.items"
         class="flex flex-column gap-2"
@@ -81,21 +93,22 @@ const removeClick = () => {
         handle=".dnd"
         animation="200"
       >
-        <transition-group name="fade">
-          <todo-card
-            v-for="todo of todos.items"
-            :key="todo.id"
-            :data="todo"
-            :selected="selected.includes( todo.id )"
-            @click="todoClick"
-            @click:completed="onCompleted"
-            @click:select="onSelect"
-          />
-        </transition-group>
+        <todo-card
+          v-for="todo of items"
+          :key="todo.id"
+          :data="todo"
+          :selected="selected.includes( todo.id )"
+          @click="todoClick"
+          @click:completed="onCompleted"
+          @click:select="onSelect"
+        />
       </vue-draggable-next>
+      <div v-if="!items.length" class="flex align-items-center text-gray-300">
+        Нет задач
+      </div>
     </div>
 
-    <todo-dialog v-model:visible="visible"/>
+    <todo-dialog v-model:visible="visible" />
 
   </div>
 </template>

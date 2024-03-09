@@ -36,7 +36,7 @@ const classList = computed<string[]>( () => {
 
 const checkboxClick = ( event: Event ) => {
   event.stopPropagation()
-  emit( 'click:completed', props.data.id, completed.value )
+  emit( 'click:completed', props.data.id, !completed.value )
 }
 
 const onCheck = ( event: Event ) => {

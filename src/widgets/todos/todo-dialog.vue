@@ -1,11 +1,9 @@
 <script setup lang="ts">
-
 import { computed, ref, watch } from 'vue'
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
 import Button from 'primevue/button'
-import Checkbox from 'primevue/checkbox'
 import { TodoEntity } from '../../shared/types'
 import { useTodosStore } from '../../app/store'
 
@@ -28,9 +26,14 @@ const todos = useTodosStore()
 const name = ref<string>( '' )
 const description = ref<string>( '' )
 
-watch( () => todos.current, () => {
-  name.value = todos.current?.name || ''
-  description.value = todos.current?.description || ''
+watch( () => visible.value, () => {
+  if ( !visible.value ) {
+    name.value = ''
+    description.value = ''
+  } else {
+    name.value = todos.current?.name || ''
+    description.value = todos.current?.description || ''
+  }
 } )
 
 const save = () => {
@@ -44,10 +47,9 @@ const save = () => {
     todos.addTodo( {
       name: name.value,
       description: description.value,
+      completed: false,
     } )
   }
-  name.value = ''
-  description.value = ''
   visible.value = false
 }
 
