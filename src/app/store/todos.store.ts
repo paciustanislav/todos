@@ -12,7 +12,6 @@ export const useTodosStore = defineStore( 'todos', () => {
   const items = ref<TodoEntity[]>( persistent ? JSON.parse( persistent ) : [] )
 
   watch( [ items, items.value ], () => {
-    console.log( items.value )
     localStorage.setItem( lsk, JSON.stringify( items.value ) )
   } )
 
