@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 
 export const useTodosStore = defineStore( 'todos', () => {
 
-  const lsk = 'todos-iss'
+  const lsk = 'todos'
 
   const persistent = localStorage.getItem( lsk )
 
