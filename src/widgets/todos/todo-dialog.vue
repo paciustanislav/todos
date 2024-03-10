@@ -4,8 +4,8 @@ import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
 import Button from 'primevue/button'
-import { TodoEntity } from '../../shared/types'
-import { useTodosStore } from '../../app/store'
+import { TodoEntity } from '@/shared/types.ts'
+import { useTodosStore } from '@/app/store'
 
 const emit = defineEmits<{
   'update:visible': [ boolean ],

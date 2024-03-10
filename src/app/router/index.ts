@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { IndexPage } from '../../pages'
+import { IndexPage } from '@/pages'
 
 const router = createRouter( {
   history: createWebHistory( import.meta.env.BASE_URL ),

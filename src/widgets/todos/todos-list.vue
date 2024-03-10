@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
-import { useTodosStore } from '../../app/store'
+import { useTodosStore } from '@/app/store'
 import Button from 'primevue/button'
-import TodoCard from '../../shared/todos/todo-card.vue'
-import TodoDialog from './todo-dialog.vue'
-import TodoFilters from '../../shared/todos/todo-filters.vue'
-import { Filters, TodoEntity } from '../../shared/types.ts'
+import TodoCard from '@/shared/todos/todo-card.vue'
+import TodoDialog from '@/widgets/todos/todo-dialog.vue'
+import TodoFilters from '@/shared/todos/todo-filters.vue'
+import { Filters, TodoEntity } from '@/shared/types.ts'
 
 const todos = useTodosStore()
 
 const visible = ref<boolean>( false )
 const selected = ref<number[]>( [] )
-const filters = ref<Filters | null>( null )
+const filters = ref<Filters>( {
+  completed: null
+} )
 
 const onSelect = ( id: number ) => {
   if ( selected.value.includes( id ) ) {
@@ -23,14 +25,9 @@ const onSelect = ( id: number ) => {
   }
 }
 
-const onCompleted = ( id: number, status: boolean ) => {
-  todos.setCompleted( id, status )
-  console.log( id, status )
-}
+const onCompleted = ( id: number, status: boolean ) => todos.setCompleted( id, status )
 
-// ...
-
-const todoClick = ( id: number ) => {
+const onClick = ( id: number ) => {
   todos.setCurrent( id )
   visible.value = true
 }
@@ -45,7 +42,7 @@ const removeClick = () => {
   selected.value = []
 }
 
-const onChangeFilters = ( f: Filters ) => filters.value = f
+const onChangeFilters = ( newFilters: Filters ) => filters.value = newFilters
 
 const items = computed<TodoEntity[]>( () => {
   if ( filters.value ) {
@@ -74,6 +71,7 @@ const items = computed<TodoEntity[]>( () => {
         size="small"
         text
         icon="pi pi-trash"
+        :badge="String( selected.length )"
         @click="removeClick"
       />
       <Button
@@ -98,10 +96,19 @@ const items = computed<TodoEntity[]>( () => {
           :key="todo.id"
           :data="todo"
           :selected="selected.includes( todo.id )"
-          @click="todoClick"
-          @click:completed="onCompleted"
-          @click:select="onSelect"
-        />
+          @click="onClick( todo.id )"
+          @change:completed="onCompleted"
+        >
+          <template #actions>
+            <i v-tooltip.bottom="'Редактировать'" class="pi pi-pencil" />
+            <i v-if="filters.completed === null" v-tooltip.bottom="'Перетащить'" class="pi pi-bars dnd" @click.stop />
+            <i
+              v-tooltip.bottom="selected.includes( todo.id ) ? 'Отменить' : 'Выбрать'"
+              :class="[ 'pi', selected.includes( todo.id ) ? 'pi-times' : 'pi-check', 'select' ]"
+              @click.stop="onSelect( todo.id )"
+            />
+          </template>
+        </todo-card>
       </vue-draggable-next>
       <div v-if="!items.length" class="flex align-items-center text-gray-300">
         Нет задач

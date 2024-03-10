@@ -1,6 +1,6 @@
 import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
-import { TodoEntity } from '../../shared/types'
+import { TodoEntity } from '@/shared/types.ts'
 
 export const useTodosStore = defineStore( 'todos', () => {
 

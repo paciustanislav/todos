@@ -1,25 +1,17 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import Card from 'primevue/card'
-import { TodoEntity } from '../types'
+import { TodoEntity } from '@/shared/types'
 import Checkbox from 'primevue/checkbox'
 
 const props = defineProps<{
-  data?: TodoEntity
+  data: TodoEntity
   selected?: boolean
 }>()
 
 const emit = defineEmits<{
-  'click': [ number ]
-  'click:select': [ number ]
-  'click:completed': [ number, boolean ]
+  'change:completed': [ number, boolean ]
 }>()
-
-const click = () => {
-  if ( props.data ) {
-    emit( 'click', props.data.id )
-  }
-}
 
 const completed = ref<boolean>( !!props?.data?.completed )
 
@@ -34,22 +26,14 @@ const classList = computed<string[]>( () => {
   return list
 } )
 
-const checkboxClick = ( event: Event ) => {
-  event.stopPropagation()
-  emit( 'click:completed', props.data.id, !completed.value )
-}
-
-const onCheck = ( event: Event ) => {
-  event.stopPropagation()
-  emit( 'click:select', props.data.id )
-}
-
-const onBars = ( event: Event ) => event.stopPropagation()
+watch( completed, () => {
+  emit( 'change:completed', props.data.id, completed.value )
+} )
 
 </script>
 
 <template>
-  <Card v-if="data" @click="click" :class="classList">
+  <Card v-if="data" :class="classList" v-bind="$attrs">
     <template #content>
       <div class="flex flex-column gap-2">
         <div class="flex align-items-center">
@@ -57,7 +41,7 @@ const onBars = ( event: Event ) => event.stopPropagation()
             v-model:model-value="completed"
             class="mr-2"
             binary
-            @click="checkboxClick"
+            @click.stop
           />
           <span class="font-semibold">{{ data.name }}</span>
         </div>
@@ -65,10 +49,8 @@ const onBars = ( event: Event ) => event.stopPropagation()
           {{ data.description }}
         </div>
       </div>
-      <div class="todo-card-actions flex align-items-center gap-2">
-        <i class="pi pi-pencil" />
-        <i class="pi pi-bars dnd" @click="onBars" />
-        <i class="pi pi-check select" @click="onCheck" />
+      <div class="todo-card-actions flex align-items-center">
+        <slot name="actions" />
       </div>
     </template>
   </Card>

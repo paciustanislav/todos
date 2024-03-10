@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue'
 import Dropdown from 'primevue/dropdown'
-import { Filters } from '../types'
+import { Filters } from '@/shared/types'
 
 const emit = defineEmits<{
   'update:visible': [ boolean ],
   'change': [ Filters ]
 }>()
 
-const filters = reactive<Filters>( {} )
+const filters = reactive<Filters>( {
+  completed: null,
+} )
 
 const options = ref( [
   { name: 'Все', value: null },
@@ -24,9 +26,8 @@ watch( filters, () => emit( 'change', filters ) )
   <div class="flex flex-row gap-2">
     <Dropdown
       v-model="filters.completed"
-      placeholder="Поиск ..."
+      placeholder="Сортировка"
       size="small"
-      style="width: 100%;"
       :options="options"
       option-label="name"
       option-value="value"

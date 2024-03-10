@@ -7,5 +7,5 @@ export interface TodoEntity {
 }
 
 export interface Filters {
-  completed?: boolean
+  completed: boolean | null
 }

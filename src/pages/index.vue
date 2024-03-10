@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TodosList from '../widgets/todos/todos-list.vue'
+import TodosList from '@/widgets/todos/todos-list.vue'
 </script>
 
 <template>
