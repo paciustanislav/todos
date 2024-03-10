@@ -12,6 +12,7 @@ export const useTodosStore = defineStore( 'todos', () => {
   const items = ref<TodoEntity[]>( persistent ? JSON.parse( persistent ) : [] )
 
   watch( [ items, items.value ], () => {
+    console.log( items.value )
     localStorage.setItem( lsk, JSON.stringify( items.value ) )
   } )
 
@@ -32,7 +33,7 @@ export const useTodosStore = defineStore( 'todos', () => {
   }
 
   const addTodo = ( todo: Pick<TodoEntity, 'name' | 'description' | 'completed' | 'expired_at'> ) => {
-    items.value.splice( 0, 0, { id: Date.now(), ...todo } )
+    items.value.splice( 0, 0, { ...todo, id: Date.now() } )
   }
 
   const updatedTodo = ( todo: TodoEntity ) => {
@@ -43,9 +44,12 @@ export const useTodosStore = defineStore( 'todos', () => {
   }
 
   const removeTodo = ( ids: number[] ) => {
-    items.value = [
-      ...items.value.filter( ( todo ) => todo?.id && !ids.includes( todo?.id ) )
-    ]
+    for ( const id of ids ) {
+      const index = items.value.findIndex( ( todo ) => todo.id === id )
+      if ( index >= 0 ) {
+        items.value.splice( index, 1 )
+      }
+    }
   }
 
   const setExample = () => {
@@ -84,9 +88,9 @@ export const useTodosStore = defineStore( 'todos', () => {
         completed: false,
         expired_at: dayjs().add( 24 * 5, 'hour' ).format( 'YYYY-MM-DD HH:mm:ss' )
       },
-    ].reverse()
+    ]
     for ( const task of tasks ) {
-      addTodo( task )
+      items.value.push( task )
     }
   }
 
