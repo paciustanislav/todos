@@ -95,11 +95,10 @@ const isSelected = ( id: number ) => selected.value.includes( id )
           :key="todo.id"
           :data="todo"
           :selected="isSelected( todo.id )"
-          @click="onClick( todo.id )"
           @change:completed="onCompleted"
         >
           <template #actions>
-            <i v-tooltip.bottom="'Редактировать'" class="pi pi-pencil" />
+            <i v-tooltip.bottom="'Редактировать'" class="pi pi-pencil" @click="onClick( todo.id )" />
             <i v-if="filters.completed === null" v-tooltip.bottom="'Перетащить'" class="pi pi-bars dnd" @click.stop />
             <i
               v-tooltip.bottom="isSelected( todo.id ) ? 'Отменить' : 'Выбрать'"
