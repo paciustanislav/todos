@@ -7,6 +7,7 @@ import TodoCard from '@/shared/todos/todo-card.vue'
 import TodoDialog from '@/widgets/todos/todo-dialog.vue'
 import TodoFilters from '@/shared/todos/todo-filters.vue'
 import { Filters, TodoEntity } from '@/shared/types.ts'
+import TodosManagementButton from '@/features/todos/todos-management-button.vue'
 
 const todos = useTodosStore()
 
@@ -52,12 +53,20 @@ const items = computed<TodoEntity[]>( () => {
 
 const isSelected = ( id: number ) => selected.value.includes( id )
 
+
 </script>
 
 <template>
   <div class="flex flex-column gap-2 p-4">
 
-    <h1>Задачи</h1>
+    <div class="flex justify-content-between align-items-center">
+      <div>
+        <h1>Задачи</h1>
+      </div>
+      <div>
+        <todos-management-button :items="items" />
+      </div>
+    </div>
 
     <div class="flex gap-2">
       <div class="flex flex-1">

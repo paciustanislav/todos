@@ -27,6 +27,14 @@ export const useTodosStore = defineStore( 'todos', () => {
     return null
   } )
 
+  const clearItems = () => {
+    items.value = []
+  }
+
+  const setItems = ( todos: TodoEntity[] ) => {
+    items.value = todos
+  }
+
   const setCurrent = ( id: number | null ) => {
     currentId.value = id
   }
@@ -112,6 +120,8 @@ export const useTodosStore = defineStore( 'todos', () => {
     setCompleted,
     current,
     setExample,
+    setItems,
+    clearItems,
   }
 
 } )

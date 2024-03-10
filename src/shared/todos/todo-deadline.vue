@@ -25,6 +25,8 @@ const text = computed( () => {
   return dayjs( props.expired_at ).fromNow()
 } )
 
+// new Intl.RelativeTimeFormat
+
 </script>
 
 <template>
