@@ -1,8 +1,11 @@
-# todo-iss (vue + typescript)
+# todos (vue + typescript)
 
 ### installation
 
 run `npm i` and then run `npm run dev`
+
+### deployed version
+#### https://todos.paciudev.ru
 
 ### dev-history
 
