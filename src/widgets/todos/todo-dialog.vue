@@ -27,17 +27,17 @@ const todos = useTodosStore()
 
 const name = ref<string>( '' )
 const description = ref<string>( '' )
-const expired_at = ref<string | Date>( '' )
+const expired_at = ref<string | Date | null>( '' )
 
 watch( () => visible.value, () => {
   if ( !visible.value ) {
     name.value = ''
     description.value = ''
-    expired_at.value = ''
+    expired_at.value = null
   } else {
     name.value = todos.current?.name || ''
     description.value = todos.current?.description || ''
-    expired_at.value = dayjs( todos.current?.expired_at ).toDate() || ''
+    expired_at.value = todos.current?.expired_at ? dayjs( todos.current?.expired_at ).toDate() : ''
   }
 } )
 

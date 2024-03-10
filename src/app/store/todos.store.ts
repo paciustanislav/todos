@@ -53,38 +53,38 @@ export const useTodosStore = defineStore( 'todos', () => {
   }
 
   const setExample = () => {
-    const tasks = [
+    const tasks: TodoEntity[] = [
       {
-        id: 1,
+        id: Date.now() + 1,
         name: 'Новая задача',
         description: 'С описанием',
         completed: false,
       },
       {
-        id: 2,
+        id: Date.now() + 2,
         name: 'Задача без описания',
         completed: false,
       },
       {
-        id: 3,
+        id: Date.now() + 3,
         name: 'Выполненная задача',
         completed: true,
       },
       {
-        id: 4,
+        id: Date.now() + 4,
         name: 'Срочный баг-фикс',
         completed: false,
         expired_at: dayjs().add( 1, 'hour' ).format( 'YYYY-MM-DD HH:mm:ss' )
       },
       {
-        id: 5,
+        id: Date.now() + 5,
         name: 'Задача #5',
         completed: false,
         expired_at: dayjs().add( 24 * 1.5, 'hour' ).format( 'YYYY-MM-DD HH:mm:ss' )
       },
       {
-        id: 6,
-        name: 'Задача #5',
+        id: Date.now() + 6,
+        name: 'Задача #6',
         completed: false,
         expired_at: dayjs().add( 24 * 5, 'hour' ).format( 'YYYY-MM-DD HH:mm:ss' )
       },
