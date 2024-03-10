@@ -45,13 +45,12 @@ const removeClick = () => {
 const onChangeFilters = ( newFilters: Filters ) => filters.value = newFilters
 
 const items = computed<TodoEntity[]>( () => {
-  if ( filters.value ) {
-    return todos.items.filter( ( todo ) => !(
-      typeof filters.value?.completed === 'boolean' && todo.completed !== filters.value?.completed
-    ) )
-  }
-  return todos.items
+  return todos.items.filter( ( todo ) => !(
+    typeof filters.value?.completed === 'boolean' && todo.completed !== filters.value?.completed
+  ) )
 } )
+
+const isSelected = ( id: number ) => selected.value.includes( id )
 
 </script>
 
@@ -95,7 +94,7 @@ const items = computed<TodoEntity[]>( () => {
           v-for="todo of items"
           :key="todo.id"
           :data="todo"
-          :selected="selected.includes( todo.id )"
+          :selected="isSelected( todo.id )"
           @click="onClick( todo.id )"
           @change:completed="onCompleted"
         >
@@ -103,15 +102,15 @@ const items = computed<TodoEntity[]>( () => {
             <i v-tooltip.bottom="'Редактировать'" class="pi pi-pencil" />
             <i v-if="filters.completed === null" v-tooltip.bottom="'Перетащить'" class="pi pi-bars dnd" @click.stop />
             <i
-              v-tooltip.bottom="selected.includes( todo.id ) ? 'Отменить' : 'Выбрать'"
-              :class="[ 'pi', selected.includes( todo.id ) ? 'pi-times' : 'pi-check', 'select' ]"
+              v-tooltip.bottom="isSelected( todo.id ) ? 'Отменить' : 'Выбрать'"
+              :class="[ 'pi', isSelected( todo.id ) ? 'pi-times' : 'pi-check', 'select' ]"
               @click.stop="onSelect( todo.id )"
             />
           </template>
         </todo-card>
       </vue-draggable-next>
-      <div v-if="!items.length" class="flex align-items-center text-gray-300">
-        Нет задач
+      <div v-if="!items.length" class="flex align-items-center text-gray-400">
+        Нет задач (<span class="text-primary cursor-pointer" @click="todos.setExample()">добавить пример</span>)
       </div>
     </div>
 

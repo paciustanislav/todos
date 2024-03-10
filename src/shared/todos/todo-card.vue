@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue'
 import Card from 'primevue/card'
 import { TodoEntity } from '@/shared/types'
 import Checkbox from 'primevue/checkbox'
+import TodoDeadline from '@/shared/todos/todo-deadline.vue'
 
 const props = defineProps<{
   data: TodoEntity
@@ -27,7 +28,9 @@ const classList = computed<string[]>( () => {
 } )
 
 watch( completed, () => {
-  emit( 'change:completed', props.data.id, completed.value )
+  if ( props.data?.id ) {
+    emit( 'change:completed', props.data.id, completed.value )
+  }
 } )
 
 </script>
@@ -47,6 +50,9 @@ watch( completed, () => {
         </div>
         <div v-if="data?.description">
           {{ data.description }}
+        </div>
+        <div v-if="!completed && data?.expired_at">
+          <todo-deadline :expired_at="data.expired_at" />
         </div>
       </div>
       <div class="todo-card-actions flex align-items-center">

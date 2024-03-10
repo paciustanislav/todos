@@ -1,15 +1,18 @@
 import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { TodoEntity } from '@/shared/types.ts'
+import dayjs from 'dayjs'
 
 export const useTodosStore = defineStore( 'todos', () => {
 
-  const persistent = localStorage.getItem( 'todo-iss' )
+  const lsk = 'todos-iss'
+
+  const persistent = localStorage.getItem( lsk )
 
   const items = ref<TodoEntity[]>( persistent ? JSON.parse( persistent ) : [] )
 
-  watch( items.value, () => {
-    localStorage.setItem( 'todo-iss', JSON.stringify( items.value ) )
+  watch( [ items, items.value ], () => {
+    localStorage.setItem( lsk, JSON.stringify( items.value ) )
   } )
 
   const currentId = ref<number | null>( null )
@@ -28,9 +31,8 @@ export const useTodosStore = defineStore( 'todos', () => {
     currentId.value = id
   }
 
-  const addTodo = ( todo: TodoEntity ) => {
-    todo.id = Date.now()
-    items.value.splice( 0, 0, todo )
+  const addTodo = ( todo: Pick<TodoEntity, 'name' | 'description' | 'completed' | 'expired_at'> ) => {
+    items.value.splice( 0, 0, { id: Date.now(), ...todo } )
   }
 
   const updatedTodo = ( todo: TodoEntity ) => {
@@ -41,7 +43,51 @@ export const useTodosStore = defineStore( 'todos', () => {
   }
 
   const removeTodo = ( ids: number[] ) => {
-    items.value = items.value.filter( ( { id } ) => !ids.includes( id ) )
+    items.value = [
+      ...items.value.filter( ( todo ) => todo?.id && !ids.includes( todo?.id ) )
+    ]
+  }
+
+  const setExample = () => {
+    const tasks = [
+      {
+        id: 1,
+        name: 'Новая задача',
+        description: 'С описанием',
+        completed: false,
+      },
+      {
+        id: 2,
+        name: 'Задача без описания',
+        completed: false,
+      },
+      {
+        id: 3,
+        name: 'Выполненная задача',
+        completed: true,
+      },
+      {
+        id: 4,
+        name: 'Срочный баг-фикс',
+        completed: false,
+        expired_at: dayjs().add( 1, 'hour' ).format( 'YYYY-MM-DD HH:mm:ss' )
+      },
+      {
+        id: 5,
+        name: 'Задача #5',
+        completed: false,
+        expired_at: dayjs().add( 24 * 1.5, 'hour' ).format( 'YYYY-MM-DD HH:mm:ss' )
+      },
+      {
+        id: 6,
+        name: 'Задача #5',
+        completed: false,
+        expired_at: dayjs().add( 24 * 5, 'hour' ).format( 'YYYY-MM-DD HH:mm:ss' )
+      },
+    ].reverse()
+    for ( const task of tasks ) {
+      addTodo( task )
+    }
   }
 
   const setCompleted = ( id: number, status: boolean ) => {
@@ -62,6 +108,7 @@ export const useTodosStore = defineStore( 'todos', () => {
     setCurrent,
     setCompleted,
     current,
+    setExample,
   }
 
 } )

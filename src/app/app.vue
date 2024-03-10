@@ -8,9 +8,10 @@ import { RouterView } from 'vue-router'
   </div>
 </template>
 
-<style>
+<style lang="scss">
 @import 'style.scss';
 @import 'primevue/resources/themes/tailwind-light/theme.css';
+// @import 'primevue/resources/themes/aura-light-green/theme.css';
 @import 'primeicons/primeicons.css';
 @import 'primeflex/primeflex.scss';
 </style>

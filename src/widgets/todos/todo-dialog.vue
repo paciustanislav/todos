@@ -2,10 +2,12 @@
 import { computed, ref, watch } from 'vue'
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
+import Calendar from 'primevue/calendar'
 import Textarea from 'primevue/textarea'
 import Button from 'primevue/button'
-import { TodoEntity } from '@/shared/types.ts'
+import { TodoEntity } from '@/shared/types'
 import { useTodosStore } from '@/app/store'
+import dayjs from 'dayjs'
 
 const emit = defineEmits<{
   'update:visible': [ boolean ],
@@ -25,29 +27,35 @@ const todos = useTodosStore()
 
 const name = ref<string>( '' )
 const description = ref<string>( '' )
+const expired_at = ref<string | Date>( '' )
 
 watch( () => visible.value, () => {
   if ( !visible.value ) {
     name.value = ''
     description.value = ''
+    expired_at.value = ''
   } else {
     name.value = todos.current?.name || ''
     description.value = todos.current?.description || ''
+    expired_at.value = dayjs( todos.current?.expired_at ).toDate() || ''
   }
 } )
 
 const save = () => {
+  const expiredAt = dayjs( expired_at.value ).format( 'YYYY-MM-DD HH:mm:00' )
   if ( todos.current ) {
     todos.updatedTodo( {
       ...todos.current,
       name: name.value,
       description: description.value,
+      expired_at: expiredAt,
     } )
   } else {
     todos.addTodo( {
       name: name.value,
       description: description.value,
       completed: false,
+      expired_at: expiredAt,
     } )
   }
   visible.value = false
@@ -62,6 +70,14 @@ const remove = () => {
 
 const canSave = computed<boolean>( () => !!name.value )
 
+const namePlaceholder = computed( () => todos.current?.name || 'Название' )
+const descriptionPlaceholder = computed( () => todos.current?.description || 'Описание' )
+const expiredAtPlaceholder = computed( () =>
+  todos.current?.expired_at
+    ? dayjs( todos.current?.expired_at ).format( 'DD.MM.YYYY HH:mm' )
+    : 'Дэдлайн'
+)
+
 </script>
 
 <template>
@@ -70,16 +86,21 @@ const canSave = computed<boolean>( () => !!name.value )
     modal
     header="Задача"
     :draggable="false"
+    dismissable-mask
     :style="{ width: 'calc( 100% - 32px )', maxWidth: '400px' }"
   >
     <div class="flex flex-column gap-2">
-      <InputText v-model:model-value="name" placeholder="Название" size="small" />
-      <Textarea v-model:model-value="description" placeholder="Описание" size="small" autoResize />
+      <InputText v-model:model-value="name" :placeholder="namePlaceholder" />
+      <Textarea v-model:model-value="description" :placeholder="descriptionPlaceholder" autoResize />
+      <Calendar
+        v-model:model-value="expired_at"
+        :placeholder="expiredAtPlaceholder" dateFormat="dd.mm.yy"
+        show-time hour-format="24"
+      />
       <div class="flex justify-content-end gap-2">
         <Button
           v-if="todos.current?.id"
           type="button"
-          size="small"
           label="Удалить"
           severity="danger"
           text
@@ -87,7 +108,6 @@ const canSave = computed<boolean>( () => !!name.value )
         />
         <Button
           type="button"
-          size="small"
           label="Сохранить"
           :disabled="!canSave"
           @click="save"
