@@ -97,7 +97,6 @@ const expiredAtPlaceholder = computed( () =>
         :placeholder="expiredAtPlaceholder" dateFormat="dd.mm.yy"
         show-time hour-format="24"
       />
-      {{ expired_at }}
       <div class="flex justify-content-end gap-2">
         <Button
           v-if="todos.current?.id"
