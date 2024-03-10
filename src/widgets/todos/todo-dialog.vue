@@ -42,7 +42,7 @@ watch( () => visible.value, () => {
 } )
 
 const save = () => {
-  const expiredAt = dayjs( expired_at.value ).format( 'YYYY-MM-DD HH:mm:00' )
+  const expiredAt = expired_at.value ? dayjs( expired_at.value ).format( 'YYYY-MM-DD HH:mm:00' ) : null
   if ( todos.current ) {
     todos.updatedTodo( {
       ...todos.current,
@@ -87,7 +87,7 @@ const expiredAtPlaceholder = computed( () =>
     header="Задача"
     :draggable="false"
     dismissable-mask
-    :style="{ width: 'calc( 100% - 32px )', maxWidth: '400px' }"
+    :style="{ width: 'calc( 100% - 48px )', maxWidth: '400px' }"
   >
     <div class="flex flex-column gap-2">
       <InputText v-model:model-value="name" :placeholder="namePlaceholder" />
@@ -97,6 +97,7 @@ const expiredAtPlaceholder = computed( () =>
         :placeholder="expiredAtPlaceholder" dateFormat="dd.mm.yy"
         show-time hour-format="24"
       />
+      {{ expired_at }}
       <div class="flex justify-content-end gap-2">
         <Button
           v-if="todos.current?.id"

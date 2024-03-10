@@ -55,7 +55,7 @@ const isSelected = ( id: number ) => selected.value.includes( id )
 </script>
 
 <template>
-  <div class="flex flex-column gap-2 p-2">
+  <div class="flex flex-column gap-2 p-4">
 
     <h1>Задачи</h1>
 
